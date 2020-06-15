@@ -1,0 +1,144 @@
+#include <bits/stdc++.h>
+using namespace std;
+class multime{
+    private:
+        int n=0,v[1001];
+    public:
+        friend fstream& operator >> (fstream &in, multime &m){
+            int val;
+            in >> m.n;
+            for(int i = 1; i <= m.n; i++)
+            {
+                in >> val;
+                m.v[i] = val;
+            }
+            return in;
+        }
+        friend fstream& operator<<(fstream &out, multime m){
+            out << "{ ";
+            for(int i = 1; i <= m.n; i ++)
+                out << m.v[i] << " ";
+            out << "}\n";
+            return out;
+        }
+        friend ostream& operator<<(ostream &out, multime m){
+            cout << "{ ";
+            for(int i =1; i <= m.n; i++)
+                cout << m.v[i] << " ";
+            cout << "}\n";
+            return out;
+        }
+        multime operator+(multime m){
+            multime C;
+            bool ok;
+            for(int i = 1; i <= n; i++)
+                C.v[++C.n] = v[i];
+            for(int i = 1; i <= m.n; i++){
+                ok=false;
+                for(int j = 1; j <= C.n && !ok; j++)
+                    if(C.v[j] == m.v[i]){
+                        ok = true;
+                        break;
+                    }
+                if(ok == false) C.v[++C.n] = m.v[i];
+            }
+            return C;
+        }
+        multime operator+(int a){
+            multime C = *this;
+            bool ok = false;
+            for(int i = 1; i <= C.n; i++)
+                if(C.v[i] == a)
+                    {ok = true; break;}
+            if(ok == false)
+                C.v[++C.n] = a;
+            return C;
+        }
+        multime operator*(multime m){
+            multime C;
+            bool ok;
+            for(int i = 1; i <= n; i++)
+            {
+                ok = false;
+                for(int j = 1; j <= m.n; j++)
+                    if(v[i] == m.v[j])
+                    {
+                        ok = true;
+                        break;
+                    }
+                if(ok == true)
+                    C.v[++C.n] = v[i];
+            }
+            return C;
+        }
+        multime operator-(multime m){
+            multime C;
+            bool ok;
+            for(int i = 1; i <= n; i++)
+            {
+                ok = false;
+                for(int j = 1; j <= m.n; j++)
+                    if(v[i] == m.v[j])
+                    {
+                        ok = true;
+                        break;
+                    }
+                if(ok == false)
+                    C.v[++C.n] = v[i];
+            }
+            return C;
+        }
+        friend bool operator<=(int a,multime m){
+            for(int i = 1; i <=m.n; i++)
+                if(a == m.v[i])
+                    return true;
+            return false;
+        }
+        multime operator-(int a){
+            multime C = *this;
+            int poz = -1;
+            for(int i = 1; i <= C.n; i++)
+                if(C.v[i] == a)
+                    {poz = i;break;}
+            if(poz != -1)
+                for(int i = poz; i < C.n; i++)
+                    C.v[i] = C.v[i+1];
+            C.n--;
+            return C;
+        }
+        multime operator+(const string &s){
+            multime C;
+            int val;
+            for(int i = 1; i <= n; i++)
+                C.v[++C.n] = v[i];
+            stringstream s2(s);
+            while(s2 >> val) C.v[++C.n] = val;
+            return C;
+        }
+};
+int main(void)
+{
+    multime A,B,C;
+    fstream f,g;
+    f.open("multime.in",ios::in);
+    g.open("temp.txt",ios::out);
+    f>>A>>B; // citeste numarul de elemente apoi elementele propriu-zise, pentru fiecare multime
+	  g<<A; // scrie in fisier elementele multimii A
+    C=A+B; cout<<"Reuniunea este "<<C; // scrie pe ecran multimea C
+    C=A+32;
+    cout<<"Multimea dupa adaugarea unui numar este "<<C;
+    C=A*B;
+    cout<<"Intersectia este "<<C;
+    C=A-B;
+    cout<<"Diferenta este "<<C;
+    if(32<=A)
+        cout<<"32 apartine multimii "<<A;
+    else
+        cout<<"32 nu apartine multimii "<<A;
+    C=A-32;
+    cout<<"Dupa eliminarea unui element "<<C;
+    C=A+"8 -7 15     22"; // reuniune intre A si numerele din string
+    cout<<C;
+    f.close();
+    g.close();
+}
